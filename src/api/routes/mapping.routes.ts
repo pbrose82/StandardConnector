@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { Mapping } from '../../models/mapping.model';
 import { FieldMapping } from '../../models/field-mapping.model';
 import { logger } from '../../utils/logger';
+import { getErrorMessage } from '../../utils/error-utils';
 
 const router = Router();
 
@@ -42,7 +43,7 @@ router.post('/', async (req: Request, res: Response) => {
     res.status(201).json(savedMapping);
   } catch (error) {
     logger.error('Error creating mapping:', error);
-    res.status(400).json({ message: 'Error creating mapping', error: error.message });
+    res.status(400).json({ message: 'Error creating mapping', error: getErrorMessage(error) });
   }
 });
 
@@ -63,7 +64,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.json(mapping);
   } catch (error) {
     logger.error(`Error updating mapping ${req.params.id}:`, error);
-    res.status(400).json({ message: 'Error updating mapping', error: error.message });
+    res.status(400).json({ message: 'Error updating mapping', error: getErrorMessage(error) });
   }
 });
 
@@ -112,7 +113,7 @@ router.post('/:mappingId/fields', async (req: Request, res: Response) => {
     res.status(201).json(savedFieldMapping);
   } catch (error) {
     logger.error(`Error creating field mapping for mapping ${req.params.mappingId}:`, error);
-    res.status(400).json({ message: 'Error creating field mapping', error: error.message });
+    res.status(400).json({ message: 'Error creating field mapping', error: getErrorMessage(error) });
   }
 });
 
@@ -133,7 +134,7 @@ router.put('/fields/:id', async (req: Request, res: Response) => {
     res.json(fieldMapping);
   } catch (error) {
     logger.error(`Error updating field mapping ${req.params.id}:`, error);
-    res.status(400).json({ message: 'Error updating field mapping', error: error.message });
+    res.status(400).json({ message: 'Error updating field mapping', error: getErrorMessage(error) });
   }
 });
 
