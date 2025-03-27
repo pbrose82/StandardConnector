@@ -2,11 +2,12 @@
   "name": "integration-middleware",
   "version": "1.0.0",
   "description": "Middleware platform for enterprise integrations",
+  "license": "MIT",
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn src/server.ts",
-    "build": "tsc",
+    "build": "tsc --skipLibCheck",
     "postinstall": "npm run build"
   },
   "dependencies": {
