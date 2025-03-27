@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { connectorRegistry } from '../../core/connector-registry.service';
 import { logger } from '../../utils/logger';
+import { getErrorMessage } from '../../utils/error-utils';
 
 const router = Router();
 
@@ -87,7 +88,7 @@ router.post('/:connectorId/authenticate', async (req: Request, res: Response) =>
     });
   } catch (error) {
     logger.error(`Error authenticating with ${req.params.connectorId}:`, error);
-    res.status(401).json({ message: 'Authentication failed', error: error.message });
+    res.status(401).json({ message: 'Authentication failed', error: getErrorMessage(error) });
   }
 });
 
