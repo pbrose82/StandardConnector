@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { Integration } from '../../models/integration.model';
 import { logger } from '../../utils/logger';
+import { getErrorMessage } from '../../utils/error-utils';
 
 const router = Router();
 
@@ -41,7 +42,7 @@ router.post('/', async (req: Request, res: Response) => {
     res.status(201).json(savedIntegration);
   } catch (error) {
     logger.error('Error creating integration:', error);
-    res.status(400).json({ message: 'Error creating integration', error: error.message });
+    res.status(400).json({ message: 'Error creating integration', error: getErrorMessage(error) });
   }
 });
 
@@ -62,7 +63,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.json(integration);
   } catch (error) {
     logger.error(`Error updating integration ${req.params.id}:`, error);
-    res.status(400).json({ message: 'Error updating integration', error: error.message });
+    res.status(400).json({ message: 'Error updating integration', error: getErrorMessage(error) });
   }
 });
 
