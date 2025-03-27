@@ -1,25 +1,36 @@
+// src/models/sync-log.model.ts
 import mongoose, { Document, Schema } from 'mongoose';
 
-export interface ISyncRule extends Document {
+export interface ISyncLog extends Document {
   integrationId: mongoose.Types.ObjectId;
-  name: string;
-  description?: string;
-  triggerEvent: string;
-  condition?: string;
-  action: string;
-  isActive: boolean;
+  integrationType?: string;
+  startTime: Date;
+  endTime?: Date;
+  status: 'running' | 'completed' | 'failed';
+  recordsProcessed?: number;
+  recordsSucceeded?: number;
+  recordsFailed?: number;
+  error?: string;
+  details?: any;
   createdAt: Date;
   updatedAt: Date;
 }
 
-const syncRuleSchema = new Schema<ISyncRule>({
+const syncLogSchema = new Schema<ISyncLog>({
   integrationId: { type: Schema.Types.ObjectId, ref: 'Integration', required: true },
-  name: { type: String, required: true },
-  description: { type: String },
-  triggerEvent: { type: String, required: true },
-  condition: { type: String },
-  action: { type: String, required: true },
-  isActive: { type: Boolean, default: true },
+  integrationType: { type: String },
+  startTime: { type: Date, required: true },
+  endTime: { type: Date },
+  status: { 
+    type: String, 
+    enum: ['running', 'completed', 'failed'],
+    default: 'running'
+  },
+  recordsProcessed: { type: Number },
+  recordsSucceeded: { type: Number },
+  recordsFailed: { type: Number },
+  error: { type: String },
+  details: { type: Schema.Types.Mixed },
 }, { timestamps: true });
 
-export const SyncRule = mongoose.model<ISyncRule>('SyncRule', syncRuleSchema);
+export const SyncLog = mongoose.model<ISyncLog>('SyncLog', syncLogSchema);
