@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { syncManager } from '../../core/sync/sync-manager';
 import { logger } from '../../utils/logger';
+import { getErrorMessage } from '../../utils/error-utils';
 
 const router = Router();
 
@@ -31,7 +32,7 @@ router.post('/:integrationId/:mappingId', async (req: Request, res: Response) =>
     res.status(200).json({ 
       received: true,
       processed: false,
-      error: error.message
+      error: getErrorMessage(error)
     });
   }
 });
