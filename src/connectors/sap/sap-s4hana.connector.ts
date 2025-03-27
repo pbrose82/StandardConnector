@@ -15,6 +15,7 @@ import {
 } from '../../core/connector.interface';
 import { config } from '../../config';
 import { logger } from '../../utils/logger';
+import { getErrorMessage } from '../../utils/error-utils';
 
 export class SAPS4HANAConnector implements Connector {
   id = 'sap-s4hana';
@@ -215,7 +216,7 @@ export class SAPS4HANAConnector implements Connector {
         success: false,
         id: '',
         data: null,
-        error: error.message
+        error: getErrorMessage(error)
       };
     }
   }
@@ -239,7 +240,7 @@ export class SAPS4HANAConnector implements Connector {
       return {
         success: false,
         data: null,
-        error: error.message
+        error: getErrorMessage(error)
       };
     }
   }
@@ -314,7 +315,7 @@ export class SAPS4HANAConnector implements Connector {
         success: false,
         id,
         data: null,
-        error: error.message
+        error: getErrorMessage(error)
       };
     }
   }
@@ -336,7 +337,7 @@ export class SAPS4HANAConnector implements Connector {
       return {
         success: false,
         id,
-        error: error.message
+        error: getErrorMessage(error)
       };
     }
   }
