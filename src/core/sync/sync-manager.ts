@@ -1,3 +1,4 @@
+// src/core/sync/sync-manager.ts
 import { Integration } from '../../models/integration.model';
 import { Mapping } from '../../models/mapping.model';
 import { FieldMapping } from '../../models/field-mapping.model';
@@ -7,6 +8,7 @@ import { connectorRegistry } from '../connector-registry.service';
 import { transformationService } from '../transformation/transformation.service';
 import { config } from '../../config';
 import { logger } from '../../utils/logger';
+import { FieldMappingDTO, MappingType } from '../mapping/mapping-types';
 
 export class SyncManager {
   private mappingEngine: MappingEngine;
@@ -57,6 +59,19 @@ export class SyncManager {
         // 4.1 Get field mappings
         const fieldMappings = await FieldMapping.find({ mappingId: mapping._id });
         
+        // Convert Mongoose documents to FieldMappingDTO objects
+        const fieldMappingsDTO: FieldMappingDTO[] = fieldMappings.map(mapping => ({
+          id: mapping._id.toString(),
+          mappingId: mapping.mappingId.toString(),
+          sourceFieldId: mapping.sourceFieldId,
+          targetFieldId: mapping.targetFieldId,
+          sourceFieldPath: mapping.sourceFieldPath,
+          targetFieldPath: mapping.targetFieldPath,
+          mappingType: mapping.mappingType,
+          mappingConfig: mapping.mappingConfig,
+          transformations: mapping.transformations
+        }));
+        
         // 4.2 Get source data
         const sourceQuery = mapping.filterCondition ? JSON.parse(mapping.filterCondition) : {};
         const sourceData = await sourceConnector.query(
@@ -76,10 +91,10 @@ export class SyncManager {
         
         for (const record of sourceData.records) {
           try {
-            // Transform data
+            // Transform data using the DTO objects instead of Mongoose documents
             const transformedData = await this.mappingEngine.transformData(
               record,
-              fieldMappings,
+              fieldMappingsDTO,
               sourceFields,
               targetFields
             );
@@ -153,7 +168,7 @@ export class SyncManager {
       // Update sync log
       syncLog.endTime = new Date();
       syncLog.status = 'failed';
-      syncLog.error = error.message;
+      syncLog.error = error instanceof Error ? error.message : String(error);
       await syncLog.save();
       
       throw error;
