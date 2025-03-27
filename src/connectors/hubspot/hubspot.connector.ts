@@ -15,6 +15,7 @@ import {
 } from '../../core/connector.interface';
 import { config } from '../../config';
 import { logger } from '../../utils/logger';
+import { getErrorMessage } from '../../utils/error-utils';
 
 export class HubSpotConnector implements Connector {
   id = 'hubspot';
@@ -185,7 +186,7 @@ export class HubSpotConnector implements Connector {
         success: false,
         id: '',
         data: null,
-        error: error.message
+        error: getErrorMessage(error)
       };
     }
   }
@@ -210,7 +211,7 @@ export class HubSpotConnector implements Connector {
       return {
         success: false,
         data: null,
-        error: error.message
+        error: getErrorMessage(error)
       };
     }
   }
@@ -290,7 +291,7 @@ export class HubSpotConnector implements Connector {
         success: false,
         id,
         data: null,
-        error: error.message
+        error: getErrorMessage(error)
       };
     }
   }
@@ -312,7 +313,7 @@ export class HubSpotConnector implements Connector {
       return {
         success: false,
         id,
-        error: error.message
+        error: getErrorMessage(error)
       };
     }
   }
