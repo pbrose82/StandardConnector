@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { config } from '../config';
 import { logger } from '../utils/logger';
+import { getErrorMessage } from '../utils/error-utils';
 
 // Basic authentication middleware
 export const authMiddleware = (
@@ -27,7 +28,7 @@ export const authMiddleware = (
     
     next();
   } catch (error) {
-    logger.warn('Authentication failed:', error.message);
+    logger.warn('Authentication failed:', getErrorMessage(error));
     return res.status(401).json({ message: 'Authentication failed' });
   }
 };
